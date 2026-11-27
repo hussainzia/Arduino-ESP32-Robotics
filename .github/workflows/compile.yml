@@ -67,7 +67,7 @@ jobs:
             sketch-paths: |
               - 01_Robot_Cars/19_WiFi_Controlled_ESP8266
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: arduino/compile-sketches@v1
         with:
           fqbn: ${{ matrix.board.fqbn }}
