@@ -1,0 +1,82 @@
+name: Compile Sketches
+
+# Builds every sketch with the real Arduino / ESP32 toolchains,
+# so broken code is caught before students download it.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: ${{ matrix.board.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        board:
+          - name: Arduino UNO
+            fqbn: arduino:avr:uno
+            platforms: |
+              - name: arduino:avr
+            sketch-paths: |
+              - 01_Robot_Cars/01_Motor_Test
+              - 01_Robot_Cars/02_Sensor_Test
+              - 01_Robot_Cars/03_Line_Follower_2IR
+              - 01_Robot_Cars/04_Line_Follower_PID_5IR
+              - 01_Robot_Cars/05_Obstacle_Avoiding
+              - 01_Robot_Cars/06_Human_Following
+              - 01_Robot_Cars/07_Bluetooth_Controlled
+              - 01_Robot_Cars/08_Voice_Controlled
+              - 01_Robot_Cars/09_IR_Remote_Controlled
+              - 01_Robot_Cars/10_Edge_Avoiding
+              - 01_Robot_Cars/11_Light_Following
+              - 01_Robot_Cars/12_Wall_Following
+              - 01_Robot_Cars/13_Fire_Fighting
+              - 01_Robot_Cars/14_Sumo_Robot
+              - 01_Robot_Cars/15_Line_Follower_Obstacle_Stop
+              - 01_Robot_Cars/16_Maze_Solver
+              - 01_Robot_Cars/17_Gesture_Controlled/Gesture_Receiver
+              - 01_Robot_Cars/17_Gesture_Controlled/Gesture_Transmitter
+              - 01_Robot_Cars/18_Self_Balancing
+              - 01_Robot_Cars/20_Obstacle_Avoiding_No_Servo
+              - 02_Robotic_Arms/01_Potentiometer_Arm
+              - 02_Robotic_Arms/02_Joystick_Arm
+              - 02_Robotic_Arms/03_Record_Playback_Arm
+              - 02_Robotic_Arms/04_Bluetooth_App_Arm
+              - 02_Robotic_Arms/06_Automatic_Pick_and_Place
+          - name: ESP32
+            fqbn: esp32:esp32:esp32
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+            sketch-paths: |
+              - 02_Robotic_Arms/05_ESP32_Web_Slider_Arm
+              - 03_ESP32_Robots/01_ESP32_WiFi_Joystick_Car
+              - 03_ESP32_Robots/02_ESP32_Bluetooth_Car
+              - 03_ESP32_Robots/03_ESP_NOW_Gesture_Car/Gesture_Car_RX
+              - 03_ESP32_Robots/03_ESP_NOW_Gesture_Car/Gesture_Glove_TX
+              - 03_ESP32_Robots/04_ESP32_Line_Follower_Web_PID
+              - 03_ESP32_Robots/05_ESP32_Smart_Car_Auto_Manual
+          - name: ESP8266 NodeMCU
+            fqbn: esp8266:esp8266:nodemcuv2
+            platforms: |
+              - name: esp8266:esp8266
+                source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
+            sketch-paths: |
+              - 01_Robot_Cars/19_WiFi_Controlled_ESP8266
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.board.fqbn }}
+          platforms: ${{ matrix.board.platforms }}
+          sketch-paths: ${{ matrix.board.sketch-paths }}
+          enable-warnings-report: true
+          libraries: |
+            - name: Servo
+            - name: IRremote
+            - name: RF24
+            - name: LiquidCrystal I2C
+            - name: ESP32Servo

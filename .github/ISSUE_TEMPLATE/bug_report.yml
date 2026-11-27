@@ -1,0 +1,30 @@
+name: Bug report
+description: A sketch doesn't compile or the hardware doesn't work as described
+labels: [bug]
+body:
+  - type: input
+    id: project
+    attributes:
+      label: Project folder
+      placeholder: e.g. 01_Robot_Cars/03_Line_Follower_2IR
+    validations:
+      required: true
+  - type: input
+    id: board
+    attributes:
+      label: Board and IDE version
+      placeholder: e.g. Arduino UNO, Arduino IDE 2.3.4 / ESP32 core 3.1.1
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happens?
+      description: Paste the full error message, or describe what the hardware does.
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you checked?
+      description: Wiring, libraries installed, Serial Monitor output...
